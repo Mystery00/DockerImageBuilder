@@ -1,0 +1,52 @@
+[global]
+print_configs = false
+hostname = "$APP_NAME"
+omit_hostname = false
+precision = "ms"
+interval = %INTERVAL%
+concurrency = -1
+
+[global.labels]
+source="categraf"
+
+[log]
+file_name = "stdout"
+max_size = 100
+max_age = 1
+max_backups = 1
+local_time = true
+compress = false
+
+[writer_opt]
+batch = 2000
+chan_size = 10000
+
+[[writers]]
+url = "http://127.0.0.1:17000/prometheus/v1/write"
+basic_auth_user = ""
+basic_auth_pass = ""
+timeout = 5000
+dial_timeout = 2500
+max_idle_conns_per_host = 100
+
+[http]
+enable = false
+
+# 是否启用告警自愈agent
+[ibex]
+enable = false
+
+# 心跳上报
+[heartbeat]
+enable = true
+url = "http://127.0.0.1:17000/v1/n9e/heartbeat"
+interval = 10
+basic_auth_user = ""
+basic_auth_pass = ""
+timeout = 5000
+dial_timeout = 2500
+max_idle_conns_per_host = 100
+
+# prometheus agent 功能
+[prometheus]
+enable = false
