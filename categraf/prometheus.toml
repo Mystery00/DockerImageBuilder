@@ -1,0 +1,3 @@
+[[instances]]
+urls = ["{PROMETHEUS_URL}"]
+url_label_value = "{{.Hostname}}"

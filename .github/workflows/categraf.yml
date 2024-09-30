@@ -1,0 +1,42 @@
+name: Build Categraf
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+env:
+  DOCKER_NAMESPACE: mystery0
+  SERVICE_NAME: categraf
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: github-release-getter
+        uses: Mystery00/github-release-getter@v1.1
+        id: categraf_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          repoOwner: flashcatcloud
+          repoName: categraf
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+      - name: 登录私有仓库
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: categraf
+          platforms: |
+            linux/amd64
+            linux/arm64
+          build-args: |
+            CATEGRAF_VERSION=slim-${{ steps.categraf_release.outputs.tagName }}
+          file: categraf/Dockerfile
+          builder: ${{ steps.buildx.outputs.name }}
+          push: true
+          tags: ${{ env.DOCKER_NAMESPACE }}/${{ env.SERVICE_NAME }}:latest
+          no-cache: true
