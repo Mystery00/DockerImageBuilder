@@ -8,9 +8,9 @@ set -e
       sed -i "s%{PROMETHEUS_URL}%$PROMETHEUS_URL%g" /app/conf/input.prometheus/prometheus.toml
     fi
     if [ $LABEL_VALUE ];then
-      sed -i "s/%{LABEL_VALUE}%/$LABEL_VALUE/g" /app/conf/input.prometheus/prometheus.toml
+      sed -i "s%{LABEL_VALUE}%$LABEL_VALUE%g" /app/conf/input.prometheus/prometheus.toml
     else
-      sed -i "s/%{LABEL_VALUE}%/{{.Hostname}}/g" /app/conf/input.prometheus/prometheus.toml
+      sed -i "s%{LABEL_VALUE}%{{.Hostname}}%g" /app/conf/input.prometheus/prometheus.toml
     fi
     if [ $INTERVAL ];then
       sed -i "s/%INTERVAL%/$INTERVAL/g" /app/conf/config.toml
