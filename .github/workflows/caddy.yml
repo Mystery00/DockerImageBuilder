@@ -3,6 +3,12 @@ on:
   schedule:
     - cron: '0 0 * * *'
   workflow_dispatch:
+    inputs:
+      imageTag:
+        description: '镜像Tag'
+        required: false
+        default: "latest"
+        type: string
 env:
   DOCKER_NAMESPACE: mystery0
   SERVICE_NAME: caddy
@@ -27,5 +33,5 @@ jobs:
           file: caddy/Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags: ${{ env.DOCKER_NAMESPACE }}/${{ env.SERVICE_NAME }}:latest
+          tags: ${{ env.DOCKER_NAMESPACE }}/${{ env.SERVICE_NAME }}:${{ inputs.imageTag }}
           no-cache: true
