@@ -7,7 +7,7 @@ on:
         required: true
         default: "a commit a day keeps your girlfriend away"
   schedule:
-    - cron: "30 4 * * *"
+    - cron: "30 0 * * *"
 
 jobs:
   autogreen:
