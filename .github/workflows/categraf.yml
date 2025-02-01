@@ -6,7 +6,7 @@ on:
     inputs:
       imageTag:
         description: '镜像Tag'
-        required: false
+        required: true
         default: "latest"
         type: string
 env:
