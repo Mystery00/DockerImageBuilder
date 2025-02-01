@@ -5,7 +5,8 @@ on:
       log:
         description: "Commit Log"
         required: true
-        default: "a commit a day keeps your girlfriend away"
+        default: "每天不提交代码，心里就像有个未合并的分支，随时可能冲突"
+        type: string
   schedule:
     - cron: "30 0 * * *"
 
@@ -21,11 +22,7 @@ jobs:
           git config --local user.email "mystery0dyl520@gmail.com"
           git remote set-url origin https://${{ github.repository_owner }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git pull --rebase
-      - name: Commit (default)
-        if: github.event.inputs.log == 0
-        run: git commit --allow-empty -m "a commit a day keeps your girlfriend away"
-      - name: Commit (input)
-        if: github.event.inputs.log != 0
-        run: git commit --allow-empty -m "${{ github.event.inputs.log }}"
+      - name: Commit
+        run: git commit --allow-empty -m "${{ github.event.inputs.log || '每天不提交代码，心里就像有个未合并的分支，随时可能冲突' }}"
       - name: Push
         run: git push

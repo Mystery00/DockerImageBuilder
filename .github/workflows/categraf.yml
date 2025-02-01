@@ -44,5 +44,5 @@ jobs:
           file: categraf/Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags: ${{ env.DOCKER_NAMESPACE }}/${{ env.SERVICE_NAME }}:${{ inputs.imageTag }}
+          tags: ${{ env.DOCKER_NAMESPACE }}/${{ env.SERVICE_NAME }}:${{ inputs.imageTag || 'latest' }}
           no-cache: true
