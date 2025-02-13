@@ -11,13 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: 下载Jar包
-        run: |
-          sudo apt-get update && sudo apt-get install -y wget curl jq
-          sh fabricmc/pull.sh ${{ env.MINECRAFT_VERSION }}
-          mv fabric-installer.jar fabricmc/fabric-installer.jar
-          docker_image_tag=$(cat version.txt)
-          echo "docker_image_tag=$docker_image_tag" >> $GITHUB_ENV
       - uses: docker/setup-qemu-action@v3
       - uses: docker/setup-buildx-action@v3
       - name: 登录私有仓库
@@ -34,5 +27,5 @@ jobs:
           file: fabricmc/Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags: ccr.docker.mystery0.vip/temp1/${{ env.SERVICE_NAME }}:${{ env.docker_image_tag }}
+          tags: ccr.docker.mystery0.vip/temp1/${{ env.SERVICE_NAME }}:test-only
           no-cache: true
