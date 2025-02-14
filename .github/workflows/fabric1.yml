@@ -20,7 +20,7 @@ jobs:
       - name: 登录私有仓库
         uses: docker/login-action@v3
         with:
-          registry: registry.docker.mystery0.app
+          registry: ccr.docker.mystery0.app
           username: ${{ secrets.REGISTRY_USERNAME1 }}
           password: ${{ secrets.REGISTRY_PASSWORD1 }}
       - name: Build and push
@@ -31,5 +31,5 @@ jobs:
           file: fabricmc/Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags: registry.docker.mystery0.app/temp1/${{ env.SERVICE_NAME }}:test-only
+          tags: ccr.docker.mystery0.app/temp1/${{ env.SERVICE_NAME }}:test-only
           no-cache: true
