@@ -30,6 +30,7 @@ jobs:
           context: caddy
           platforms: |
             linux/amd64
+            linux/arm64
           file: caddy/Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
