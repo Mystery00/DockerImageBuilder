@@ -1,7 +1,8 @@
-ARG CADDY_VERSION="2.10.0"
+ARG CADDY_VERSION="2.10.2"
 FROM caddy:${CADDY_VERSION}-builder as builder
 RUN xcaddy build \
     --with github.com/sillygod/cdp-cache \
+    --with github.com/git001/caddyv2-upload \
     --with github.com/Mystery00/caddy-airplane-proxy@0.0.1
 
 FROM caddy:${CADDY_VERSION}
