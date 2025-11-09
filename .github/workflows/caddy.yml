@@ -43,7 +43,7 @@ jobs:
             ${{ steps.meta.outputs.TAGS }}-arm64
 
       - name: Inspect Multi-Arch Image
-        run: docker buildx imagetools inspect ${{ steps.meta.outputs.TAGS }}
+        run: docker buildx imagetools inspect ${{ steps.meta.outputs.TAGS }} >> $GITHUB_STEP_SUMMARY
 
   # Job for AMD64 build
   build-amd64:
