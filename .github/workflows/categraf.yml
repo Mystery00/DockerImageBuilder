@@ -107,6 +107,3 @@ jobs:
           docker buildx imagetools create --tag ${{ steps.meta.outputs.TAGS }} \
             ${{ steps.meta.outputs.TAGS }}-amd64 \
             ${{ steps.meta.outputs.TAGS }}-arm64
-
-      - name: Inspect Multi-Arch Image
-        run: docker buildx imagetools inspect ${{ steps.meta.outputs.TAGS }} >> $GITHUB_STEP_SUMMARY
