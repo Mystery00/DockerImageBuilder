@@ -16,34 +16,6 @@ env:
   DOCKER_NAMESPACE: mystery0
   SERVICE_NAME: caddy
 jobs:
-  publish-manifest:
-    runs-on: ubuntu-latest
-    needs: [build-amd64, build-arm64]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-
-      - name: Gather Image Tags
-        id: meta
-        run: echo "TAGS=${{ env.DOCKER_NAMESPACE }}/${{ env.SERVICE_NAME }}:${{ inputs.imageTag || 'latest' }}" >> $GITHUB_OUTPUT
-
-      - name: Create and Push Manifest List
-        run: |
-          docker buildx imagetools create --tag ${{ steps.meta.outputs.TAGS }} \
-            ${{ steps.meta.outputs.TAGS }}-amd64 \
-            ${{ steps.meta.outputs.TAGS }}-arm64
-
-      - name: Inspect Multi-Arch Image
-        run: docker buildx imagetools inspect ${{ steps.meta.outputs.TAGS }} >> $GITHUB_STEP_SUMMARY
 
   # Job for AMD64 build
   build-amd64:
@@ -94,3 +66,29 @@ jobs:
           # Use GHA cache backend
           cache-from: type=gha,scope=caddy-build-arm64
           cache-to: type=gha,scope=caddy-build-arm64,mode=max
+
+  publish-manifest:
+    runs-on: ubuntu-latest
+    needs: [build-amd64, build-arm64]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Gather Image Tags
+        id: meta
+        run: echo "TAGS=${{ env.DOCKER_NAMESPACE }}/${{ env.SERVICE_NAME }}:${{ inputs.imageTag || 'latest' }}" >> $GITHUB_OUTPUT
+
+      - name: Create and Push Manifest List
+        run: |
+          docker buildx imagetools create --tag ${{ steps.meta.outputs.TAGS }} \
+            ${{ steps.meta.outputs.TAGS }}-amd64 \
+            ${{ steps.meta.outputs.TAGS }}-arm64
