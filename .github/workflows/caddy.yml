@@ -38,7 +38,7 @@ jobs:
 
       - name: Create and Push Manifest List
         run: |
-          docker buildx imagetools create ${{ steps.meta.outputs.TAGS }} \
+          docker buildx imagetools create --tag ${{ steps.meta.outputs.TAGS }} \
             ${{ steps.meta.outputs.TAGS }}-amd64 \
             ${{ steps.meta.outputs.TAGS }}-arm64
 
