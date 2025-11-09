@@ -1,6 +1,10 @@
 ARG CADDY_VERSION="2.10.2"
+
 FROM caddy:${CADDY_VERSION}-builder AS builder
-RUN xcaddy build \
+
+# Use a cache mount for xcaddy's module cache directory
+RUN --mount=type=cache,target=/root/.cache/xcaddy \
+    xcaddy build \
     --with github.com/sillygod/cdp-cache \
     --with github.com/git001/caddyv2-upload \
     --with github.com/Mystery00/caddy-airplane-proxy@0.0.2
