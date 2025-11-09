@@ -9,6 +9,9 @@ on:
         required: true
         default: "latest"
         type: string
+  push:
+    paths:
+      - categraf/**
 env:
   DOCKER_NAMESPACE: mystery0
   SERVICE_NAME: categraf
