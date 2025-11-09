@@ -22,7 +22,7 @@ jobs:
       categraf_tag: ${{ steps.categraf_release.outputs.tagName }}
     steps:
       - name: github-release-getter
-        uses: Mystery00/github-release-getter@v1.1
+        uses: Mystery00/github-release-getter@v1.2
         id: categraf_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

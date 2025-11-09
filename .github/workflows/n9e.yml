@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: github-release-getter
-        uses: Mystery00/github-release-getter@v1.1
+        uses: Mystery00/github-release-getter@v1.2
         id: n9e_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
