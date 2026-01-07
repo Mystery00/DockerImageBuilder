@@ -24,15 +24,14 @@ jobs:
       - name: Get latest kubectl version
         id: get_version
         run: |
-          # 从 k8s 官方获取最新稳定版版本号字符串 (例如 v1.30.0)
           VERSION=$(curl -L -s https://dl.k8s.io/release/stable.txt)
           echo "Latest version is $VERSION"
-          # 将版本号写入 output 供后续步骤使用
           echo "version=$VERSION" >> $GITHUB_OUTPUT
       - name: Download kubectl binary
         run: |
           VERSION=${{ steps.get_version.outputs.version }}
           echo "Downloading kubectl $VERSION for linux/amd64..."
+          cd kubectl
           curl -LO "https://dl.k8s.io/release/$VERSION/bin/linux/amd64/kubectl"
           ls -lh kubectl
       - name: Set up Docker Buildx
