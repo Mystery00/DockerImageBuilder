@@ -7,7 +7,7 @@ RUN --mount=type=cache,target=/root/.cache/xcaddy \
     xcaddy build \
     --with github.com/sillygod/cdp-cache \
     --with github.com/git001/caddyv2-upload \
-    --with github.com/Mystery00/caddy-airplane-proxy@0.0.2
+    --with github.com/Mystery00/caddy-airplane-proxy@0.0.3
 
 FROM caddy:${CADDY_VERSION}
 COPY --from=builder /usr/bin/caddy /usr/bin/caddy

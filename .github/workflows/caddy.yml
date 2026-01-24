@@ -16,6 +16,19 @@ env:
   DOCKER_NAMESPACE: mystery0
   SERVICE_NAME: caddy
 jobs:
+  pre-build:
+    runs-on: ubuntu-latest
+    outputs:
+      caddy_tag: ${{ steps.caddy_release.outputs.tagName }}
+    steps:
+      - name: github-release-getter
+        uses: Mystery00/github-release-getter@v1.3
+        id: caddy_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          repoOwner: caddyserver
+          repoName: caddy
 
   # Job for AMD64 build
   build-amd64:
@@ -34,6 +47,8 @@ jobs:
         with:
           context: caddy
           platforms: linux/amd64
+          build-args: |
+            CADDY_VERSION=${{ needs.pre-build.outputs.caddy_tag }}
           file: caddy/Dockerfile
           push: true
           # Push to a unique architecture-specific tag first
@@ -59,6 +74,8 @@ jobs:
         with:
           context: caddy
           platforms: linux/arm64
+          build-args: |
+            CADDY_VERSION=${{ needs.pre-build.outputs.caddy_tag }}
           file: caddy/Dockerfile
           push: true
           # Push to a unique architecture-specific tag first
