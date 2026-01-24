@@ -19,7 +19,7 @@ jobs:
   pre-build:
     runs-on: ubuntu-latest
     outputs:
-      caddy_tag: ${{ steps.caddy_release.outputs.tagName }}
+      caddy_tag: ${{ env.CADDY_TAG }}
     steps:
       - name: github-release-getter
         uses: Mystery00/github-release-getter@v1.3
@@ -29,6 +29,8 @@ jobs:
         with:
           repoOwner: caddyserver
           repoName: caddy
+      - name: removes prefix 'v' from tag name
+        run: echo "CADDY_TAG=$(echo ${{ steps.caddy_release.outputs.tagName }} | sed 's/^v//g')" >> $GITHUB_ENV
 
   # Job for AMD64 build
   build-amd64:
