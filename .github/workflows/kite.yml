@@ -47,7 +47,7 @@ jobs:
           file: kite/Dockerfile
           push: true
           # Push to a unique architecture-specific tag first
-          tags: ${{ env.DOCKER_NAMESPACE }}/${{ env.SERVICE_NAME }}:${{ inputs.imageTag || 'latest' }}-amd64
+          tags: ${{ env.DOCKER_NAMESPACE }}/${{ env.SERVICE_NAME }}:${{ needs.pre-build.outputs.kite_tag }}-amd64
 
   # Job for ARM64 build
   build-arm64:
@@ -72,7 +72,7 @@ jobs:
           file: kite/Dockerfile
           push: true
           # Push to a unique architecture-specific tag first
-          tags: ${{ env.DOCKER_NAMESPACE }}/${{ env.SERVICE_NAME }}:${{ inputs.imageTag || 'latest' }}-arm64
+          tags: ${{ env.DOCKER_NAMESPACE }}/${{ env.SERVICE_NAME }}:${{ needs.pre-build.outputs.kite_tag }}-arm64
 
   publish-manifest:
     runs-on: ubuntu-latest
@@ -92,7 +92,7 @@ jobs:
 
       - name: Gather Image Tags
         id: meta
-        run: echo "TAGS=${{ env.DOCKER_NAMESPACE }}/${{ env.SERVICE_NAME }}:${{ inputs.imageTag || 'latest' }}" >> $GITHUB_OUTPUT
+        run: echo "TAGS=${{ env.DOCKER_NAMESPACE }}/${{ env.SERVICE_NAME }}:${{ needs.pre-build.outputs.kite_tag }}" >> $GITHUB_OUTPUT
 
       - name: Create and Push Manifest List
         run: |
