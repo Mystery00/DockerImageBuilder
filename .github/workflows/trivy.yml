@@ -1,0 +1,59 @@
+name: Update and Release Trivy DB
+
+on:
+  schedule:
+    - cron: '0 16 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget apt-transport-https gnupg lsb-release
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install -y trivy
+
+      - name: Download Trivy Databases
+        run: |
+          # 创建一个干净的临时目录来存放下载的数据库文件
+          mkdir -p trivy-db-tmp
+          
+          # 下载核心漏洞库和 Java 漏洞库，重定向缓存目录到我们创建的文件夹
+          trivy image --cache-dir ./trivy-db-tmp --download-db-only
+          trivy image --cache-dir ./trivy-db-tmp --download-java-db-only
+
+      - name: Archive Databases
+        run: |
+          # 生成一个基于当前日期和时间的文件名，避免版本冲突
+          RELEASE_TAG="trivy-db-$(date +'%Y%m%d%H%M')"
+          echo "RELEASE_TAG=${RELEASE_TAG}" >> $GITHUB_ENV
+          
+          # 将数据库文件打包成 tar.gz
+          # Trivy 的数据库下载后会存在于 cache-dir 下的 db 和 java-db 目录中
+          tar -czf trivy-db.tar.gz -C ./trivy-db-tmp db java-db
+      - name: Update Latest GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: "Trivy Vulnerability Database (Latest)"
+          body: |
+            This release contains the latest Trivy vulnerability databases for offline use.
+            Updated automatically every day.
+              
+            - **Core DB & Java DB Included**
+            - Last updated: ${{ env.RELEASE_TAG }}
+          draft: false
+          prerelease: false
+          files: |
+            trivy-db.tar.gz
